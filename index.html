@@ -1,0 +1,285 @@
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      overflow-x: hidden;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: url('https://i.imgur.com/avJ1WoY.gif') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      width: 100%;
+      height: 60px;
+      background-color: rgba(30, 30, 30, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 101;
+    }
+
+    .api-icon {
+      font-size: 28px;
+      color: #fff;
+      margin-right: 10px;
+    }
+
+    .menu-toggle {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .notification-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      font-size: 26px;
+    }
+
+    .notification-message {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+      border-radius: 5px;
+      color: #fff;
+      z-index: 103;
+      font-size: 14px;
+    }
+
+    .sidebar {
+      width: 250px;
+      height: calc(100vh - 60px);
+      background-color: rgba(43, 43, 43, 0.9);
+      position: fixed;
+      left: -250px;
+      top: 60px;
+      transition: left 0.3s ease-in-out;
+      z-index: 102;
+      overflow-y: auto;
+      padding-top: 10px;
+    }
+
+    .sidebar.active {
+      left: 0;
+    }
+
+    .menu {
+      list-style: none;
+      padding: 20px;
+    }
+
+    .menu-item {
+      margin-bottom: 10px;
+    }
+
+    .menu-item > a {
+      text-decoration: none;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-radius: 5px;
+      background: rgba(68, 68, 68, 0.8);
+      cursor: pointer;
+    }
+
+    .menu-item > a:hover {
+      background-color: rgba(102, 102, 102, 0.8);
+    }
+
+    .submenu {
+      list-style: none;
+      padding-left: 20px;
+      display: none;
+    }
+
+    .submenu li {
+      padding: 8px;
+    }
+
+    .submenu li a {
+      text-decoration: none;
+      color: #ddd;
+      display: block;
+    }
+
+    .submenu li a:hover {
+      color: #fff;
+    }
+
+    .dashboard-content {
+      flex: 1;
+      padding: 80px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .dashboard-title {
+      width: 90%;
+      max-width: 800px;
+      text-align: left;
+      font-size: 18px;
+      font-weight: bold;
+      color: #ccc;
+      margin-bottom: 10px;
+    }
+
+    .dashboard-title span.dashboard-text {
+      color: #eee;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      padding: 35px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      width: 95%;
+      max-width: 850px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .card h2 {
+      font-size: 20px;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 24px;
+      color: #ddd;
+    }
+
+    .card button {
+      margin-top: 15px;
+      padding: 10px;
+      border: none;
+      background-color: #964B00;
+      color: #121212;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .card button:hover {
+      background-color: #bbb;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 15px;
+      background: rgba(30, 30, 30, 0.8);
+      font-size: 14px;
+      color: white;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Conteúdo do Dashboard -->
+  <div class="dashboard-content">
+    <div class="dashboard-title">Painel / <span class="dashboard-text">Dashboard</span></div>
+
+    <div class="card">
+      <h2>Relógio</h2>
+      <p id="clock">22:23:28</p>
+      <p id="greeting">Boa noite!</p>
+    </div>
+
+    <div class="card">
+      <h2>GITHUB</h2>
+      <p>Acesse o melhor repositório da atualidade com projetos que facilitam sua vida.</p>
+      <button onclick="window.open('https://github.com/VipCoringa', '_blank')">Acessar</button>
+    </div>
+
+    <div class="card">
+      <h2>Suporte Técnico</h2>
+      <p>Conte com o melhor suporte técnico da atualidade para resolver seus problemas com rapidez e eficiência.</p>
+      <button onclick="window.open('https://wa.me/5516981278599&amp;text=Olá%20preciso%20de%20suporte%20na%20Vipcoringa.', '_blank')">Chamar Suporte</button>
+    </div>
+
+    <div class="card">
+      <h2>Faça Sua Doação</h2>
+      <p>Qualquer valor já ajuda demais. Obrigado de coração! ♥️</p>
+      <button onclick="window.open('https://pixgg.com/Ramon', '_blank')">Chamar Suporte</button>
+    </div>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('active');
+    }
+
+    function toggleSubMenu(id) {
+      const submenu = document.getElementById(id);
+      submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+    }
+
+    function toggleNotification() {
+      const notification = document.getElementById('notification-message');
+      notification.style.display = notification.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+
+      const greetingElement = document.getElementById('greeting');
+      if (hours >= 5 && hours < 12) {
+        greetingElement.textContent = "Bom dia!";
+      } else if (hours >= 12 && hours < 18) {
+        greetingElement.textContent = "Boa tarde!";
+      } else if (hours >= 18 && hours < 24) {
+        greetingElement.textContent = "Boa noite!";
+      } else {
+        greetingElement.textContent = "Boa madrugada!";
+      }
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</body>
+</html>
