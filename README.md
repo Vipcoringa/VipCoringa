@@ -25,7 +25,7 @@
     <img src="https://img.shields.io/badge/Profile-7289DA?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
   </a>&nbsp;
 
-  <a href="https://vipcoringa.vercel.app">
+  <a href="https://vipcoringa.github.io/VipCoringa/">
     <img src="https://img.shields.io/badge/Bio-5865F2?style=for-the-badge&logo=linktree&logoColor=white" alt="BIO" />
   </a>&nbsp;
 
