@@ -1,0 +1,344 @@
+<html lang="pt-BR"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden; 
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background: url('https://i.imgur.com/avJ1WoY.gif') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+       .particle {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            top: 0; 
+            background-image: url('https://files.catbox.moe/08k59c.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: fall 10s ease-in-out infinite, rotate 5s linear infinite;
+        }
+        #particles {
+             position: fixed; 
+             top: 0;
+             left: 0;
+             width: 100vw;
+             height: 100vh;
+             pointer-events: none; 
+             z-index: -1;
+        }
+
+        @keyframes fall {
+             0% {
+             transform: translateY(-100px) rotate(0deg);
+             opacity: 1;
+             }
+             100% {
+             transform: translateY(100vh) rotate(360deg);
+             opacity: 0;
+             }
+        }
+
+        
+        .top-bar {
+            width: 100%;
+            height: 60px;
+            background-color: rgba(30, 30, 30, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 101;
+        }
+
+        .api-icon {
+            font-size: 28px;
+            color: #fff;
+            margin-right: 10px;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            font-size: 26px;
+        }
+
+        .notification-message {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            color: #fff;
+            z-index: 103;
+            font-size: 14px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            height: calc(100vh - 60px);
+            background-color: rgba(43, 43, 43, 0.9);
+            position: fixed;
+            left: -250px;
+            top: 60px;
+            transition: left 0.3s ease-in-out;
+            z-index: 102;
+            overflow-y: auto;
+            padding-top: 10px;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 20px;
+        }
+
+        .menu-item {
+            margin-bottom: 10px;
+        }
+
+        .menu-item > a {
+            text-decoration: none;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(68, 68, 68, 0.8);
+            cursor: pointer;
+        }
+
+        .menu-item > a:hover {
+            background-color: rgba(102, 102, 102, 0.8);
+        }
+
+        .submenu {
+            list-style: none;
+            padding-left: 20px;
+            display: none;
+        }
+
+        .submenu li {
+            padding: 8px;
+        }
+
+        .submenu li a {
+            text-decoration: none;
+            color: #ddd;
+            display: block;
+        }
+
+        .submenu li a:hover {
+            color: #fff;
+        }
+
+        .dashboard-content {
+            flex: 1;
+            padding: 80px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .dashboard-title {
+            width: 90%;
+            max-width: 800px;
+            text-align: left;
+            font-size: 18px; 
+            font-weight: bold;
+            color: #ccc; 
+            margin-bottom: 10px;
+        }
+
+        .dashboard-title span.dashboard-text {
+            color: #eee; 
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            padding: 35px; 
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 95%; 
+            max-width: 850px; 
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .card h2 {
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 24px;
+            color: #ddd;
+        }
+
+        .card button {
+            margin-top: 15px;
+            padding: 10px;
+            border: none;
+            background-color: #964B00;
+            color: #121212;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .card button:hover {
+            background-color: #bbb;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: rgba(30, 30, 30, 0.8);
+            font-size: 14px;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+</style>
+
+</head>
+<body>
+<div class="particles" id="particles"><div class="particle" style="left: 34.3552%; animation-delay: 2.3621s; animation-duration: 7.54948s;"></div><div class="particle" style="left: 70.4377%; animation-delay: 2.22115s; animation-duration: 8.29666s;"></div><div class="particle" style="left: 86.4269%; animation-delay: 0.266992s; animation-duration: 7.11839s;"></div><div class="particle" style="left: 80.602%; animation-delay: 2.38668s; animation-duration: 9.6656s;"></div><div class="particle" style="left: 74.9795%; animation-delay: 0.630449s; animation-duration: 7.92431s;"></div><div class="particle" style="left: 9.45843%; animation-delay: 1.78699s; animation-duration: 5.21941s;"></div><div class="particle" style="left: 80.6584%; animation-delay: 2.17206s; animation-duration: 6.4689s;"></div><div class="particle" style="left: 71.4438%; animation-delay: 1.19894s; animation-duration: 7.53678s;"></div><div class="particle" style="left: 58.2382%; animation-delay: 1.05823s; animation-duration: 5.18096s;"></div><div class="particle" style="left: 77.3441%; animation-delay: 1.31885s; animation-duration: 9.49097s;"></div><div class="particle" style="left: 5.24965%; animation-delay: 3.02922s; animation-duration: 9.4207s;"></div><div class="particle" style="left: 63.6709%; animation-delay: 3.43638s; animation-duration: 9.26768s;"></div><div class="particle" style="left: 59.762%; animation-delay: 0.750839s; animation-duration: 5.09775s;"></div><div class="particle" style="left: 86.278%; animation-delay: 4.66747s; animation-duration: 8.0178s;"></div><div class="particle" style="left: 96.1836%; animation-delay: 4.58098s; animation-duration: 8.99752s;"></div><div class="particle" style="left: 82.8349%; animation-delay: 2.5936s; animation-duration: 8.27482s;"></div><div class="particle" style="left: 51.7483%; animation-delay: 0.674458s; animation-duration: 8.53182s;"></div><div class="particle" style="left: 63.6404%; animation-delay: 0.745576s; animation-duration: 6.65525s;"></div><div class="particle" style="left: 91.9418%; animation-delay: 0.294592s; animation-duration: 9.81234s;"></div><div class="particle" style="left: 61.6659%; animation-delay: 1.80766s; animation-duration: 5.45613s;"></div><div class="particle" style="left: 29.0325%; animation-delay: 4.95874s; animation-duration: 7.25387s;"></div><div class="particle" style="left: 79.6387%; animation-delay: 1.8543s; animation-duration: 6.01743s;"></div><div class="particle" style="left: 82.413%; animation-delay: 2.34313s; animation-duration: 5.16027s;"></div><div class="particle" style="left: 36.9308%; animation-delay: 2.81267s; animation-duration: 9.76517s;"></div><div class="particle" style="left: 31.4%; animation-delay: 3.06349s; animation-duration: 5.63084s;"></div><div class="particle" style="left: 13.545%; animation-delay: 0.680116s; animation-duration: 9.93665s;"></div><div class="particle" style="left: 42.6409%; animation-delay: 2.92134s; animation-duration: 9.29268s;"></div><div class="particle" style="left: 20.2792%; animation-delay: 3.49466s; animation-duration: 6.78922s;"></div><div class="particle" style="left: 0.854825%; animation-delay: 1.04547s; animation-duration: 6.14607s;"></div><div class="particle" style="left: 88.5754%; animation-delay: 1.84455s; animation-duration: 5.80686s;"></div></div>      
+           
+    <!-- Conteúdo do Dashboard -->
+<div class="dashboard-content">
+    <div class="dashboard-title">Painel / <span class="dashboard-text">Dashboard</span></div>
+    
+    <div class="card">
+        <h2>Relógio</h2>
+        <p id="clock">22:23:28</p>
+        
+        <p id="greeting">Boa noite!</p>
+    </div>
+    
+    <div class="card">
+        <h2>GITHUB</h2>
+        <p>Acesse o melhor repositório da atualidade com projetos que facilitam sua vida.</p>
+        <button onclick="window.open('https://github.com/VipCoringa', '_blank')">Acessar</button>
+    </div>
+    
+    <div class="card">
+        <h2>Suporte Técnico</h2>
+        <p>Conte com o melhor suporte técnico da atualidade para resolver seus problemas com rapidez e eficiência.</p>
+        <button onclick="window.open('https://wa.me/5516981278599&amp;text=Olá%20preciso%20de%20suporte%20na%20Vipcoringa.', '_blank')">Chamar Suporte</button>
+    </div>
+    
+    <div class="card">
+        <h2>Faça Sua Doação</h2>
+        <p>Qualquer valor já ajuda demais. Obrigado de coração! ♥️
+</p>
+        <button onclick="window.open('https://pixgg.com/Ramon', '_blank')">Chamar Suporte</button>
+    </div>
+
+<script>
+
+    
+    function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+
+    for (let i = 0; i < 30; i++) { 
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        particle.style.left = `${Math.random() * 100}%`;
+
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+
+        particle.style.animationDuration = `${5 + Math.random() * 5}s`;
+
+        particlesContainer.appendChild(particle);
+    }
+}
+
+createParticles();
+
+   
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('active');
+    }
+
+   
+    function toggleSubMenu(id) {
+        const submenu = document.getElementById(id);
+        submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+    }
+
+   
+    function toggleNotification() {
+        const notification = document.getElementById('notification-message');
+        notification.style.display = notification.style.display === 'block' ? 'none' : 'block';
+    }
+
+  
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        
+       
+        const greetingElement = document.getElementById('greeting');
+        if (hours >= 5 && hours < 12) {
+            greetingElement.textContent = "Bom dia!";
+        } else if (hours >= 12 && hours < 18) {
+            greetingElement.textContent = "Boa tarde!";
+        } else if (hours >= 18 && hours < 24) {
+            greetingElement.textContent = "Boa noite!";
+        } else {
+            greetingElement.textContent = "Boa madrugada!";
+        }
+    }
+    setInterval(updateClock, 1000);
+    updateClock(); 
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script></body></html>
