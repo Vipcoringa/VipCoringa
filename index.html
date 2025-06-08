@@ -1,357 +1,239 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VipCoringa</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <!-- Configuração do Tailwind CSS (mesclada com suas definições e as do modal) -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#007bff', // Sua cor primária
-                        secondary: '#0a1a2f', // Sua cor secundária
-                        glass: 'rgba(255, 255, 255, 0.1)', // Cor para o efeito de "vidro"
-                        modalBg: 'rgba(255, 255, 255, 0.15)', // Cor específica para o fundo do modal
-                        textLight: '#E2E8F0', // Cor de texto clara para o modal
-                        accentYellow: '#FFD700', // Adicionada uma cor amarela para destaque
-                        accentGreen: '#32CD32' // Adicionada uma cor verde para destaque
-                    },
-                    borderRadius: {
-                        'none': '0px',
-                        'sm': '4px',
-                        DEFAULT: '8px',
-                        'md': '12px',
-                        'lg': '16px',
-                        'xl': '20px',
-                        '2xl': '24px',
-                        '3xl': '32px',
-                        'full': '9999px',
-                        'button': '9999px' // Garante que o botão seja completamente arredondado
-                    },
-                    fontFamily: {
-                        mono: ['MonoFont', 'monospace'], // Sua fonte monoespaçada existente
-                        pacifico: ['Pacifico', 'cursive'], // Sua fonte Pacifico existente
-                        inter: ['Inter', 'sans-serif'], // Adicionada para o texto do modal
-                    },
-                }
-            }
-        }
-    </script>
-    <!-- Fontes do Google: Pacifico e Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Remix Icon CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-    <style>
-        /* Estilos CSS fornecidos pelo usuário */
-        @font-face {
-            font-family: 'MonoFont';
-            src: local('Courier New'), local('Consolas'), local('monospace');
-        }
-        body {
-            font-family: 'MonoFont', monospace; /* Fonte principal para o corpo */
-            background-color: #000000;
-            color: #ffffff;
-            background-image:
-                linear-gradient(rgba(10, 26, 47, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(10, 26, 47, 0.1) 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-        .ascii-panel {
-            white-space: pre; /* Mantém a formatação do ASCII art */
-            line-height: 1.2;
-            transition: all 0.3s ease;
-        }
-        .update-flash {
-            animation: flash 0.5s;
-        }
-        @keyframes flash {
-            0% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-        .grid-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VipCoringa</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Remix Icon CDN -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet" />
 
-        /* Estilos para o efeito "glass" (do código do modal) */
-        .glass {
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        /* Estilos para o modal (do código do modal) */
-        .modal {
-            background-color: var(--tw-colors-modalBg); /* Usa a cor definida no Tailwind config */
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 1rem;
-            animation: fadeInScale 0.3s ease-out forwards;
-        }
-
-        /* Animações para o modal */
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Ajustes responsivos para o modal */
-        @media (max-width: 640px) {
-            .modal {
-                width: 95%;
-                padding: 1.5rem;
-            }
-        }
-
-        /* Estilos para evitar que a imagem seja salva/arrastada */
-        .no-save-image {
-            -webkit-user-select: none; /* Safari */
-            -moz-user-select: none;    /* Firefox */
-            -ms-user-select: none;     /* IE 10+ */
-            user-select: none;         /* Standard syntax */
-            -webkit-touch-callout: none; /* iOS Safari */
-            -webkit-user-drag: none; /* Safari */
-        }
-    </style>
+  <style>
+    @font-face {
+      font-family: 'MonoFont';
+      src: local('Courier New'), local('Consolas'), monospace;
+    }
+    body {
+      font-family: 'MonoFont', monospace;
+      background-color: #000;
+      color: #fff;
+      background-image:
+        linear-gradient(rgba(10, 26, 47, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(10, 26, 47, 0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    .ascii-panel {
+      white-space: pre;
+      line-height: 1.2;
+      font-size: 0.85rem;
+      max-height: 320px;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid #007bff88;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'MonoFont', monospace;
+      user-select: none;
+    }
+    .update-flash {
+      animation: flash 0.5s;
+    }
+    @keyframes flash {
+      0% {opacity: 0.5;}
+      100% {opacity: 1;}
+    }
+    button {
+      font-family: 'Inter', sans-serif;
+    }
+    .glass {
+      background-color: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      max-width: 360px;
+      margin: 2rem auto;
+      text-align: center;
+    }
+    .modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1000;
+    }
+    .modal.show {
+      visibility: visible;
+      opacity: 1;
+    }
+    .modal-content {
+      background: rgba(10,26,47,0.85);
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 400px;
+      width: 90%;
+      color: #ddd;
+      position: relative;
+      font-family: 'Inter', sans-serif;
+      text-align: center;
+      box-shadow: 0 0 20px #007bff99;
+    }
+    .modal-content img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      border: 2px solid #007bff;
+    }
+    .modal-content button.close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: #007bff;
+      cursor: pointer;
+    }
+    footer {
+      margin-top: auto;
+      padding: 1rem 0;
+      text-align: center;
+      font-family: 'Pacifico', cursive;
+      color: #007bff;
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col justify-center items-center bg-black text-white p-4">
-    <div class="grid-bg"></div>
-    <main class="w-full max-w-md mx-auto my-8 relative">
-        <div class="text-center mb-6">
-            <h1 class="text-primary text-3xl font-['Pacifico']">VipCoringa</h1>
-            <p class="text-gray-400 mt-2">Monitor de Performance</p>
-        </div>
-        <div class="relative">
-            <div class="absolute inset-0 bg-secondary bg-opacity-10 rounded-lg blur-sm transform -translate-x-1 translate-y-1"></div>
-            <div class="relative bg-black border border-primary/30 rounded-lg p-4 shadow-lg shadow-primary/10">
-                <pre id="ascii-panel" class="ascii-panel text-sm sm:text-base text-white overflow-x-auto"></pre>
-            </div>
-        </div>
-        <div class="mt-8 text-center">
-            <p class="text-gray-400 text-sm">Atualizado em tempo real</p>
-            <div class="flex items-center justify-center mt-2">
-                <div class="w-2 h-2 rounded-full bg-primary animate-pulse mr-2"></div>
-                <span class="text-xs text-gray-400" id="last-update">Carregando...</span>
-            </div>
-        </div>
-    </main>
+<body>
 
-    <!-- Seção Desenvolvedor (integrada) -->
-    <section id="desenvolvedor" class="glass rounded-xl p-6 text-center w-full max-w-sm mx-auto my-8">
-        <div class="flex flex-col items-center">
-            <div class="w-12 h-12 flex items-center justify-center mb-4 text-primary">
-                <i class="ri-computer-line ri-2x"></i>
-            </div>
-            <h2 class="text-xl font-semibold mb-6">Desenvolvedor</h2>
-            <div class="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-primary">
-                <!-- Adicionada a classe 'no-save-image' para prevenir salvar/arrastar -->
-                <img id="devImageSection" src="https://i.imgur.com/gi0h7c1.jpeg" alt="Ramon" class="w-full h-full object-cover no-save-image">
-            </div>
-            <h3 class="text-lg font-medium mb-2">Ramon</h3>
-            <button id="openModalBtn" class="bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-button transition-colors duration-200 cursor-pointer">
-                Sobre mim
-            </button>
-        </div>
-    </section>
+  <h1 class="text-4xl font-pacifico text-primary mb-4">VipCoringa</h1>
+  <p class="mb-6 text-gray-400">Monitor de Performance em tempo real</p>
 
-    <!-- Modal (integrado) -->
-    <div id="developerModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" id="modalOverlay"></div>
-        <div class="modal relative w-full max-w-md rounded-xl p-6 transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
-            <button id="closeModalBtn" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-primary/20 hover:bg-primary/30 transition-colors duration-200 cursor-pointer">
-                <i class="ri-close-line text-lg"></i>
-            </button>
-            <div class="text-center mb-6">
-                <div class="w-20 h-20 mx-auto rounded-full overflow-hidden mb-4 border-2 border-primary">
-                    <!-- Adicionada a classe 'no-save-image' para prevenir salvar/arrastar -->
-                    <img id="devImageModal" src="https://i.imgur.com/gi0h7c1.jpeg" alt="Ramon" class="w-full h-full object-cover no-save-image">
-                </div>
-                <h3 class="text-xl font-semibold">Ramon</h3>
-            </div>
-            <p class="text-gray-300 mb-6 text-center" style="font-family: 'Inter', sans-serif;">
-                Ramon, o dev que jura ser o melhor. Vive colado na IA, cria sites incríveis e faz tudo parecer fácil.
-            </p>
-            <div class="flex justify-center space-x-4">
-                <!-- Link atualizado para o GitHub -->
-                <a href="https://github.com/VipCoringa" class="w-10 h-10 flex items-center justify-center rounded-full bg-primary/20 hover:bg-primary/30 transition-colors duration-200 cursor-pointer" aria-label="GitHub">
-                    <i class="ri-github-fill text-lg"></i>
-                </a>
-            </div>
-        </div>
+  <pre id="ascii-panel" class="ascii-panel" aria-live="polite" aria-atomic="true"></pre>
+
+  <p class="mt-4 text-gray-400 text-sm" id="last-update">Carregando...</p>
+
+  <section class="glass" aria-label="Informações do desenvolvedor">
+    <i class="ri-computer-line ri-3x mb-4" style="color:#007bff;"></i>
+    <h2 class="text-2xl font-semibold mb-3" style="color:#007bff;">Desenvolvedor</h2>
+    <img src="https://i.imgur.com/gi0h7c1.jpeg" alt="Foto do Ramon" />
+    <h3 class="text-xl mt-2 mb-4" style="color:#007bff;">Ramon</h3>
+    <button id="openModalBtn" class="bg-primary text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors" aria-haspopup="dialog" aria-controls="developerModal">
+      Sobre mim
+    </button>
+  </section>
+
+  <div id="developerModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" class="modal" tabindex="-1">
+    <div class="modal-content">
+      <button class="close-btn" id="closeModalBtn" aria-label="Fechar modal">&times;</button>
+      <img src="https://i.imgur.com/XU9s98u.jpeg" alt="VipCoringa" />
+      <h3 id="modalTitle" class="text-2xl mb-4" style="color:#007bff;">Ramon</h3>
+      <p>Eu não sou um monstro, sou apenas à frente da curva.</p>
+      <p class="mt-4">
+        <a href="https://github.com/VipCoringa" target="_blank" rel="noopener" aria-label="VipCoringa" style="color:#007bff; text-decoration: underline;">
+          GitHub
+          <i class="ri-github-fill"></i>
+        </a>
+      </p>
     </div>
+  </div>
 
-    <footer class="w-full py-4 text-center mt-auto">
-        <p class="text-primary font-['Pacifico'] text-xl">VipCoringa</p>
-        <p class="text-xs text-gray-500 mt-1">© 2025 Todos os direitos reservados</p>
-    </footer>
+  <footer>
+    &copy; 2025 Todos os direitos reservados - VipCoringa
+  </footer>
 
-    <!-- Script para o monitor de performance (já existente) -->
-    <script id="api-data-fetcher">
-        document.addEventListener('DOMContentLoaded', function() {
-            const asciiPanel = document.getElementById('ascii-panel');
-            const lastUpdate = document.getElementById('last-update');
-            let lastData = '';
+  <script>
+    // ASCII panel and real-time update
+    const asciiPanel = document.getElementById('ascii-panel');
+    const lastUpdate = document.getElementById('last-update');
 
-            function formatDateTime(date) {
-                const hours = String(date.getHours()).padStart(2, '0');
-                const minutes = String(date.getMinutes()).padStart(2, '0');
-                const seconds = String(date.getSeconds()).padStart(2, '0');
-                return `${hours}:${minutes}:${seconds}`;
-            }
+    function formatTime(date) {
+      return date.toLocaleTimeString('pt-BR', { hour12: false });
+    }
 
-            async function fetchData() {
-                try {
-                    const now = new Date();
-                    const views = Math.floor(650000 + Math.random() * 10000);
-                    const formattedViews = views.toLocaleString('pt-BR');
-                    const time = formatDateTime(now);
+    function generateAsciiArt(views, uptime, loadAvg) {
+      return `
+╔════════════════════════════════╗
+║        MONITOR VIPCORINGA      ║
+╠════════════════════════════════╣
+║ Visitas: ${views.toString().padStart(10)}         ║
+║ Uptime: ${uptime.padEnd(13)} ║
+║ Load Avg: ${loadAvg.padEnd(12)} ║
+╚════════════════════════════════╝
+`;
+    }
 
-                    // Conteúdo HTML colorido para o painel ASCII
-                    const data = `
-<span class="text-gray-300">╔════════════════════════════════╗</span>
-<span class="text-primary">║ 𝙼𝙾𝙽𝙸𝚃𝙾𝚁 𝙳𝙴 𝚅𝙸𝙴𝚆𝚂 ║</span>
-<span class="text-gray-300">╠════════════════════════════════╣</span>
-<span class="text-gray-300">║ Usuário: <span class="text-accentYellow">VipCoringa</span> ║</span>
-<span class="text-gray-300">╠════════════════════════════════╣</span>
-<span class="text-gray-300">║ 𝚅𝙸𝙴𝚆𝚂 𝙰𝚃𝚄𝙰𝙸𝚂 : <span class="text-accentYellow">${formattedViews}</span> ║</span>
-<span class="text-gray-300">║ 𝚂𝚃𝙰𝚃𝚄𝚂 : <span class="text-accentGreen">⇧ 𝚂𝚄𝙱𝙸𝙽𝙳𝙾</span> ║</span>
-<span class="text-gray-300">║ 𝙷𝙾𝚁𝙰𝚁𝙸𝙾 : <span class="text-accentYellow">${time}</span> ║</span>
-<span class="text-gray-300">╚════════════════════════════════╝</span>`.trim(); // .trim() remove espaços em branco extras
+    function updatePerformance() {
+      // Simulando dados
+      const views = Math.floor(650000 + Math.random() * 10000).toLocaleString('pt-BR');
+      const uptime = new Date(processUptime() * 1000).toISOString().substr(11, 8) || "00:10:23";
+      const loadAvg = (Math.random() * 2).toFixed(2);
 
-                    if (data !== lastData) {
-                        // Usar innerHTML para renderizar as tags de cor
-                        asciiPanel.innerHTML = data;
-                        asciiPanel.classList.add('update-flash');
-                        setTimeout(() => {
-                            asciiPanel.classList.remove('update-flash');
-                        }, 500);
-                        lastData = data;
-                    }
-                    lastUpdate.textContent = `Última atualização: ${formatDateTime(now)}`;
-                } catch (error) {
-                    console.error('Erro ao buscar dados:', error);
-                    asciiPanel.innerHTML = '<span class="text-red-500">Erro ao carregar dados. Tentando novamente...</span>';
-                }
-            }
+      const asciiArt = generateAsciiArt(views, uptime, loadAvg);
+      asciiPanel.textContent = asciiArt;
 
-            // Carregar dados imediatamente
-            fetchData();
-            // Atualizar a cada segundo
-            setInterval(fetchData, 1000);
-        });
-    </script>
+      lastUpdate.textContent = `Última atualização: ${formatTime(new Date())}`;
 
-    <!-- Script para efeitos visuais (já existente) -->
-    <script id="visual-effects">
-        document.addEventListener('DOMContentLoaded', function() {
-            const gridBg = document.querySelector('.grid-bg');
+      // Flash effect
+      asciiPanel.classList.remove('update-flash');
+      void asciiPanel.offsetWidth; // trigger reflow
+      asciiPanel.classList.add('update-flash');
+    }
 
-            function createGridEffect() {
-                const width = window.innerWidth;
-                const height = window.innerHeight;
-                const gridSize = 20;
-                const cols = Math.ceil(width / gridSize);
-                const rows = Math.ceil(height / gridSize);
-                let html = '';
+    // Process uptime mock
+    let startTime = Date.now();
+    function processUptime() {
+      return (Date.now() - startTime) / 1000;
+    }
 
-                for (let i = 0; i < rows; i++) {
-                    for (let j = 0; j < cols; j++) {
-                        const opacity = Math.random() * 0.05;
-                        const size = 1 + Math.random();
-                        html += `<div style="position:absolute; top:${i * gridSize}px; left:${j * gridSize}px; width:${size}px; height:${size}px; background-color:rgba(0,123,255,${opacity});"></div>`;
-                    }
-                }
-                gridBg.innerHTML = html;
-            }
+    updatePerformance();
+    setInterval(updatePerformance, 5000);
 
-            createGridEffect();
+    // Modal logic
+    const openModalBtn = document.getElementById('openModalBtn');
+    const developerModal = document.getElementById('developerModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
 
-            let resizeTimeout;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(createGridEffect, 200);
-            });
-        });
-    </script>
+    openModalBtn.addEventListener('click', () => {
+      developerModal.classList.add('show');
+      developerModal.focus();
+    });
 
-    <!-- Script para o Modal do Desenvolvedor (integrado) -->
-    <script id="developer-modal-script">
-        document.addEventListener('DOMContentLoaded', function() {
-            // Obtém referências aos elementos do DOM
-            const openModalBtn = document.getElementById('openModalBtn');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const developerModal = document.getElementById('developerModal');
-            const modalOverlay = document.getElementById('modalOverlay');
-            const modalContent = document.getElementById('modalContent');
+    closeModalBtn.addEventListener('click', () => {
+      developerModal.classList.remove('show');
+      openModalBtn.focus();
+    });
 
-            // Referências às imagens para evitar salvar/arrastar
-            const devImageSection = document.getElementById('devImageSection');
-            const devImageModal = document.getElementById('devImageModal');
+    developerModal.addEventListener('click', (event) => {
+      if (event.target === developerModal) {
+        developerModal.classList.remove('show');
+        openModalBtn.focus();
+      }
+    });
 
-            /**
-             * Abre o modal, aplicando classes para transição e exibição.
-             */
-            function openModal() {
-                developerModal.classList.remove('hidden'); // Remove a classe 'hidden' para tornar o modal visível
-                // Usa setTimeout para permitir que o navegador aplique 'hidden' antes de iniciar a transição
-                setTimeout(() => {
-                    modalContent.classList.remove('opacity-0', 'scale-95'); // Remove classes para iniciar a transição de opacidade e escala
-                    modalContent.classList.add('opacity-100', 'scale-100'); // Adiciona classes para o estado final da transição
-                }, 10); // Pequeno atraso para garantir a transição
-            }
-
-            /**
-             * Fecha o modal, aplicando classes para transição e ocultação.
-             */
-            function closeModal() {
-                modalContent.classList.remove('opacity-100', 'scale-100'); // Remove classes para iniciar a transição inversa
-                modalContent.classList.add('opacity-0', 'scale-95'); // Adiciona classes para o estado inicial da transição
-                // Adiciona a classe 'hidden' após a transição terminar
-                modalContent.addEventListener('transitionend', () => {
-                    developerModal.classList.add('hidden'); // Esconde o modal completamente após a transição
-                }, { once: true }); // Garante que o evento seja removido após uma única execução
-            }
-
-            // Adiciona event listeners aos botões e ao overlay
-            openModalBtn.addEventListener('click', openModal); // Abre o modal ao clicar no botão "Sobre mim"
-            closeModalBtn.addEventListener('click', closeModal); // Fecha o modal ao clicar no botão de fechar
-            modalOverlay.addEventListener('click', closeModal); // Fecha o modal ao clicar no overlay escuro
-
-            // Adiciona listeners para prevenir o clique direito e arrasto nas imagens
-            if (devImageSection) {
-                devImageSection.addEventListener('contextmenu', (e) => e.preventDefault()); // Previne o menu de contexto
-                devImageSection.addEventListener('dragstart', (e) => e.preventDefault()); // Previne o arrasto
-            }
-            if (devImageModal) {
-                devImageModal.addEventListener('contextmenu', (e) => e.preventDefault()); // Previne o menu de contexto
-                devImageModal.addEventListener('dragstart', (e) => e.preventDefault()); // Previne o arrasto
-            }
-        });
-    </script>
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && developerModal.classList.contains('show')) {
+        developerModal.classList.remove('show');
+        openModalBtn.focus();
+      }
+    });
+  </script>
 </body>
 </html>
