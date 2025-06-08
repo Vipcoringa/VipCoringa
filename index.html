@@ -3,39 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VipCoringa | Monitor de Views</title>
+    <title>VipCoringa | Monitor de Views com Previsão</title>
     <!-- Inclui Tailwind CSS para estilização rápida e responsiva -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Carrega a fonte 'Fira Code' do Google Fonts -->
+    <!-- Carrega a fonte 'Fira Code' do Google Fonts, ideal para exibição tipo terminal -->
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <style>
         /* Define a fonte padrão para o corpo e a cor de fundo */
         body {
-            font-family: 'Fira Code', monospace;
-            background-color: #0a0a0a;
+            font-family: 'Fira Code', monospace; /* Fira Code é uma fonte monoespaçada, ideal para terminal */
+            background-color: #0a0a0a; /* Fundo preto escuro */
         }
-        /* Estilos para a caixa do terminal, adicionando uma sombra */
+        /* Estilos para a caixa do terminal, adicionando uma sombra azul sutil */
         .terminal {
             box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
         }
         /* Estilos para o cabeçalho do terminal */
         .terminal-header {
-            height: 30px;
-            border-top-left-radius: 0.5rem;
-            border-top-right-radius: 0.5rem;
+            height: 30px; /* Altura fixa do cabeçalho */
+            border-top-left-radius: 0.5rem; /* Cantos arredondados */
+            border-top-right-radius: 0.5rem; /* Cantos arredondados */
         }
-        /* Estilos para os pontos de controle (vermelho, amarelo, verde) no cabeçalho */
+        /* Estilos para os pontos de controle (vermelho, amarelo, verde) no cabeçalho, simulando botões de janela */
         .terminal-dot {
             width: 12px;
             height: 12px;
-            border-radius: 50%;
+            border-radius: 50%; /* Círculos perfeitos */
             margin-right: 6px;
         }
-        /* Estilos para a área de conteúdo do terminal, adicionando uma sombra interna */
+        /* Estilos para a área de conteúdo do terminal, com uma sombra interna para profundidade */
         .terminal-content {
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
         }
-        /* Animação de piscar para o cursor */
+        /* Animação de piscar para o cursor no carregamento */
         .blink {
             animation: blink 1s infinite;
         }
@@ -47,21 +47,41 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-900 text-gray-100">
-    <!-- Título principal da página -->
+    <!-- Título principal da página, centralizado e com cores destacadas -->
     <div class="w-full max-w-4xl mx-auto mb-6">
         <h1 class="text-2xl md:text-3xl font-bold text-center text-blue-400 font-mono">
-            VipCoringa <span class="text-gray-400">|</span> <span class="text-gray-300">Monitor de Views</span>
+            VipCoringa <span class="text-gray-400">|</span> <span class="text-gray-300">Monitor de Views com Previsão</span>
         </h1>
     </div>
 
-    <!-- Contêiner principal do terminal -->
+    <!-- Seção de Input para a Previsão de Visualizações -->
+    <div class="w-full max-w-4xl mx-auto mb-6 p-4 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
+        <h2 class="text-xl font-bold text-blue-300 mb-4 text-center">Previsão de Visualizações</h2>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <input
+                type="number"
+                id="targetViewsInput"
+                placeholder="Views alvo (ex: 1000000)"
+                class="w-full sm:w-auto flex-grow px-4 py-2 rounded-md bg-gray-700 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="0"
+            />
+            <button
+                id="startAnalysisButton"
+                class="w-full sm:w-auto px-6 py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition duration-300 text-white font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+            >
+                Iniciar Análise
+            </button>
+        </div>
+    </div>
+
+    <!-- Contêiner principal do terminal, simulando uma janela de console -->
     <div class="terminal w-full max-w-4xl rounded-lg overflow-hidden border border-gray-700">
         <!-- Cabeçalho do terminal com os botões de controle e o endereço da fonte de dados -->
         <div class="terminal-header bg-gray-800 flex items-center px-4">
             <div class="terminal-dot bg-red-500"></div>
             <div class="terminal-dot bg-yellow-500"></div>
             <div class="terminal-dot bg-green-500"></div>
-            <!-- A URL agora indica a fonte via proxy CORS -->
+            <!-- Exibe a URL da API, informando que um proxy CORS está sendo usado -->
             <span class="text-xs ml-4 text-gray-400 hidden sm:inline">https://komarev.com/ghpvc/ (Via CORS Proxy)</span>
         </div>
         
@@ -100,45 +120,157 @@ Carregando dados do monitor... <span class="blink">|</span>
         const originalKomarevApiUrl = 'https://komarev.com/ghpvc/?username=VipCoringa&style=for-the-badge&label=Views:&color=gray';
         
         // URL do proxy CORS público, concatenado com a URL da API real.
-        // O proxy `https://corsproxy.io/` é apenas um exemplo.
-        // Você pode testar outros como `https://cors-anywhere.herokuapp.com/` (com desvantagens semelhantes).
         const komarevApiUrl = `https://corsproxy.io/?${encodeURIComponent(originalKomarevApiUrl)}`;
         
         const USERNAME = 'VipCoringa'; // Seu nome de usuário para o monitor
-        const ARROW = '⇧'; // Caractere de seta
+        const ARROW = '⇧'; // Caractere de seta para indicar status de subida
 
+        // Referências aos elementos do DOM
         const contentElement = document.getElementById('api-content');
         const lastUpdateElement = document.getElementById('last-update');
-        
+        const targetViewsInput = document.getElementById('targetViewsInput');
+        const startAnalysisButton = document.getElementById('startAnalysisButton');
+
+        // Variáveis de estado do monitor e previsão
+        let currentViews = 0; // Armazena o número de views atual
+        let targetViews = 0; // Armazena a meta de views do usuário
+        let initialViews = 0; // Views no início da análise de 1 minuto
+        let analysisStartTime = null; // Timestamp do início da análise
+        let viewRatePerSecond = 0; // Taxa de views por segundo (views/segundo)
+        let isAnalyzing = false; // Flag para indicar se a análise está em andamento
+        let analysisTimeoutId = null; // ID do timeout para a análise de 1 minuto
+
         /**
-         * Obtém a hora atual formatada.
+         * Obtém a hora atual formatada, garantindo o fuso horário correto (São Paulo).
          * @returns {string} A hora atual no formato HH:MM:SS.
          */
         function getHora() {
-            // Adicionado timeZone: 'America/Sao_Paulo' para garantir o fuso horário correto
             return new Date().toLocaleTimeString('pt-BR', { hour12: false, timeZone: 'America/Sao_Paulo' });
         }
 
         /**
-         * Constrói o painel de texto formatado, similar ao seu backend original.
-         * @param {string} views - O número de views.
-         * @param {string} status - O status do monitor.
-         * @param {string} hora - A hora atual.
+         * Obtém a data e hora formatadas.
+         * @param {Date} date - Objeto Date a ser formatado.
+         * @returns {string} A data e hora no formato DD/MM/YYYY HH:MM:SS.
+         */
+        function formatDateTime(date) {
+            return date.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' }) + ' ' +
+                   date.toLocaleTimeString('pt-BR', { hour12: false, timeZone: 'America/Sao_Paulo' });
+        }
+
+        /**
+         * Constrói o painel de texto formatado para exibição no terminal.
+         * Reintroduz os caracteres estilizados como solicitado.
+         * @param {string} views - O número de views formatado como string.
+         * @param {string} status - O status atual do monitor.
+         * @param {string} hora - A hora atual formatada.
+         * @param {number} currentViewsNum - O número de views atual em formato numérico.
          * @returns {string} O painel de texto formatado.
          */
-        function buildPanel(views, status, hora) {
-            // Usa padEnd para garantir que as strings tenham o mesmo comprimento para o alinhamento ASCII
+        function buildPanel(views, status, hora, currentViewsNum) {
+            let predictionInfo = '';
+            // Se uma análise estiver em andamento, mostra o tempo restante para o fim da análise
+            if (isAnalyzing) {
+                const elapsed = (Date.now() - analysisStartTime) / 1000; // Tempo decorrido em segundos
+                const remaining = Math.max(0, 60 - Math.floor(elapsed)); // Tempo restante (mínimo 0)
+                predictionInfo = `
+╠════════════════════════════════╣
+║ 𝙰𝙽𝙰́𝙻𝙸𝚂𝙴: ${remaining.toString().padStart(2, '0')} 𝚜𝚎𝚐𝚞𝚗𝚍𝚘𝚜 𝚛𝚎𝚜𝚝𝚊𝚗𝚝𝚎𝚜 ║
+`.trim();
+            } else if (targetViews > 0 && viewRatePerSecond > 0 && currentViewsNum < targetViews) {
+                // Se a análise terminou e há uma taxa de views válida, mostra a previsão
+                const remainingViews = targetViews - currentViewsNum; // Views que faltam para a meta
+                const timeNeededInSeconds = remainingViews / viewRatePerSecond; // Tempo necessário em segundos
+                
+                const completionDate = new Date(Date.now() + timeNeededInSeconds * 1000); // Data e hora da conclusão
+                const formattedCompletion = formatDateTime(completionDate); // Formata para exibição
+
+                predictionInfo = `
+╠════════════════════════════════╣
+║ 𝚅𝙸𝙴𝚆𝚂 𝙰𝙻𝚅𝙾 : ${targetViews.toLocaleString('pt-BR').padEnd(15)}║
+║ 𝙿𝚁𝙴𝚅𝙸𝚂𝙰̃𝙾  : ${formattedCompletion.padEnd(15)}║
+`.trim();
+            } else if (targetViews > 0 && viewRatePerSecond === 0 && !isAnalyzing) {
+                // Se a análise terminou, mas a taxa é zero (nenhuma view detectada)
+                predictionInfo = `
+╠════════════════════════════════╣
+║ 𝚅𝙸𝙴𝚆𝚂 𝙰𝙻𝚅𝙾 : ${targetViews.toLocaleString('pt-BR').padEnd(15)}║
+║ 𝚂𝚃𝙰𝚃𝚄𝚂    : 𝚂𝚎𝚖 𝚟𝚒𝚎𝚠𝚜 𝚗𝚊 𝚊𝚗𝚊́𝚕𝚒𝚜𝚎 ║
+`.trim();
+            } else if (targetViews > 0 && currentViewsNum >= targetViews && !isAnalyzing) {
+                // Se a meta já foi atingida
+                 predictionInfo = `
+╠════════════════════════════════╣
+║ 𝚅𝙸𝙴𝚆𝚂 𝙰𝙻𝚅𝙾 : ${targetViews.toLocaleString('pt-BR').padEnd(15)}║
+║ 𝚂𝚃𝙰𝚃𝚄𝚂    : 𝙼𝙴𝚃𝙰 𝙰𝚃𝙸𝙽𝙶𝙸𝙳𝙰! 🎉 ║
+`.trim();
+            }
+
+            // Constrói o painel principal com os dados e informações de previsão
             return `
 ╔════════════════════════════════╗
 ║       𝙼𝙾𝙽𝙸𝚃𝙾𝚁 𝙳𝙴 𝚅𝙸𝙴𝚆𝚂       ║
 ╠════════════════════════════════╣
-║ Usuário: ${USERNAME.padEnd(20)}║
+║ 𝚄𝚜𝚞𝚊́𝚛𝚒𝚘: ${USERNAME.padEnd(20)}║
 ╠════════════════════════════════╣
-║ 𝚅𝙸𝙴𝚆𝚂 𝙰𝚃𝚄𝙰𝙸𝚂 : ${views.toString().padEnd(15)}║
+║ 𝚅𝙸𝙴𝚆𝚂 𝙰𝚃𝚄𝙰𝙸𝚂 : ${views.padEnd(15)}║
 ║ 𝚂𝚃𝙰𝚃𝚄𝚂       : ${status.padEnd(15)}║
 ║ 𝙷𝙾𝚁𝙰́𝚁𝙸𝙾      : ${hora.padEnd(15)}║
+${predictionInfo ? predictionInfo : ''}
 ╚════════════════════════════════╝
-`.trim(); // .trim() remove espaços em branco extras no início/fim.
+`.trim();
+        }
+
+        /**
+         * Inicia o processo de análise de 1 minuto para calcular a taxa de views.
+         */
+        function startAnalysis() {
+            // Remove pontos de milhares do input e converte para número inteiro
+            const inputVal = parseInt(targetViewsInput.value.replace(/\./g, '')); 
+            
+            if (isNaN(inputVal) || inputVal <= 0) {
+                contentElement.textContent = `[${getHora()}] Por favor, insira um número de views alvo válido e positivo.`;
+                return;
+            }
+
+            targetViews = inputVal; // Define a meta de views
+            isAnalyzing = true; // Inicia o modo de análise
+            initialViews = currentViews; // Captura as views atuais como ponto de partida
+            analysisStartTime = Date.now(); // Marca o início da análise
+            viewRatePerSecond = 0; // Reseta a taxa de views antes de iniciar a nova análise
+
+            // Desabilita o input e o botão durante a análise para evitar alterações
+            startAnalysisButton.disabled = true;
+            targetViewsInput.disabled = true;
+
+            contentElement.textContent = `[${getHora()}] Iniciando análise de taxa de views para ${targetViews.toLocaleString('pt-BR')} views... Aguarde 1 minuto.`;
+            
+            // Define um timeout para encerrar a análise após 1 minuto (60 segundos)
+            analysisTimeoutId = setTimeout(endAnalysis, 60000);
+        }
+
+        /**
+         * Encerra o processo de análise de 1 minuto e calcula a taxa de views.
+         */
+        function endAnalysis() {
+            isAnalyzing = false; // Sai do modo de análise
+            const finalViews = currentViews; // Captura as views ao final do minuto
+
+            const viewsGained = finalViews - initialViews; // Views ganhas durante o minuto
+            viewRatePerSecond = viewsGained / 60; // Views por segundo
+
+            // Reabilita o input e o botão
+            startAnalysisButton.disabled = false;
+            targetViewsInput.disabled = false;
+
+            let statusMessage = '';
+            if (viewRatePerSecond > 0) {
+                statusMessage = `Taxa calculada: ${viewRatePerSecond.toFixed(2)} views/segundo.`;
+            } else {
+                statusMessage = `Nenhuma view detectada durante a análise. Tente novamente!`;
+            }
+            console.log(`Análise concluída: ${statusMessage}`);
+            // A próxima chamada de `fetchData` irá atualizar o painel com a nova taxa.
         }
 
         /**
@@ -159,18 +291,28 @@ Carregando dados do monitor... <span class="blink">|</span>
                 // A expressão regular procura por 'aria-label="(?:[^"]*:: )?([0-9,]+)"' e captura o número.
                 const match = svgText.match(/aria-label="(?:[^"]*:: )?([0-9,]+)/);
                 
-                let views = 'N/A';
+                let viewsString = 'N/A';
                 if (match && match[1]) {
-                    views = match[1]; // O número de views encontrado
+                    viewsString = match[1]; // O número de views encontrado (ex: "1,234,567")
+                    currentViews = parseInt(viewsString.replace(/,/g, '')); // Converte para número inteiro, removendo vírgulas
                 } else {
                     console.warn('Não foi possível extrair o número de views do SVG.');
+                    currentViews = 0;
                 }
 
                 const hora = getHora();
-                const status = `${ARROW} 𝚂𝚄𝙱𝙸𝙽𝙳𝙾`; // O status ainda é fixo.
+                let status = `${ARROW} 𝚂𝚄𝙱𝙸𝙽𝙳𝙾`; // Status padrão
+                
+                // Ajusta o status dependendo do estado da análise ou da meta
+                if (isAnalyzing) {
+                    status = `𝙰𝙽𝙰𝙻𝙸𝚂𝙰𝙽𝙳𝙾...`;
+                } else if (targetViews > 0 && currentViews >= targetViews) {
+                    status = `𝙼𝙴𝚃𝙰 𝙰𝚃𝙸𝙽𝙶𝙸𝙳𝙰!`;
+                }
 
-                // Constrói o painel com os dados obtidos
-                const painel = buildPanel(views, status, hora);
+
+                // Constrói o painel com os dados obtidos e informações de previsão
+                const painel = buildPanel(viewsString, status, hora, currentViews);
                 contentElement.textContent = painel; // Atualiza o conteúdo do terminal
                 
                 updateDateTime(); // Atualiza o carimbo de data/hora da última atualização
@@ -182,7 +324,7 @@ Carregando dados do monitor... <span class="blink">|</span>
         }
 
         /**
-         * Atualiza a exibição da data e hora da última atualização.
+         * Atualiza a exibição da data e hora da última atualização no rodapé.
          */
         function updateDateTime() {
             const now = new Date();
@@ -190,11 +332,14 @@ Carregando dados do monitor... <span class="blink">|</span>
             lastUpdateElement.textContent = `Última atualização: ${timeString}`;
         }
 
-        // Carrega os dados imediatamente e depois a cada 1 segundo
+        // Adiciona o event listener para o botão de iniciar análise
+        startAnalysisButton.addEventListener('click', startAnalysis);
+
+        // Carrega os dados imediatamente ao iniciar e depois a cada 1 segundo
         fetchData();
         setInterval(fetchData, 1000);
 
-        // Atualiza o horário a cada segundo para manter preciso
+        // Atualiza o horário da última atualização no rodapé a cada segundo para manter preciso
         updateDateTime();
         setInterval(updateDateTime, 1000);
     </script>
