@@ -1,239 +1,203 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>VipCoringa</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <!-- Remix Icon CDN -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet" />
-
-  <style>
-    @font-face {
-      font-family: 'MonoFont';
-      src: local('Courier New'), local('Consolas'), monospace;
-    }
-    body {
-      font-family: 'MonoFont', monospace;
-      background-color: #000;
-      color: #fff;
-      background-image:
-        linear-gradient(rgba(10, 26, 47, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(10, 26, 47, 0.1) 1px, transparent 1px);
-      background-size: 20px 20px;
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem;
-    }
-    .ascii-panel {
-      white-space: pre;
-      line-height: 1.2;
-      font-size: 0.85rem;
-      max-height: 320px;
-      overflow-y: auto;
-      background: rgba(0,0,0,0.7);
-      border: 1px solid #007bff88;
-      border-radius: 8px;
-      padding: 1rem;
-      font-family: 'MonoFont', monospace;
-      user-select: none;
-    }
-    .update-flash {
-      animation: flash 0.5s;
-    }
-    @keyframes flash {
-      0% {opacity: 0.5;}
-      100% {opacity: 1;}
-    }
-    button {
-      font-family: 'Inter', sans-serif;
-    }
-    .glass {
-      background-color: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: 1rem;
-      padding: 1.5rem;
-      max-width: 360px;
-      margin: 2rem auto;
-      text-align: center;
-    }
-    .modal {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      visibility: hidden;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: 1000;
-    }
-    .modal.show {
-      visibility: visible;
-      opacity: 1;
-    }
-    .modal-content {
-      background: rgba(10,26,47,0.85);
-      border-radius: 1rem;
-      padding: 2rem;
-      max-width: 400px;
-      width: 90%;
-      color: #ddd;
-      position: relative;
-      font-family: 'Inter', sans-serif;
-      text-align: center;
-      box-shadow: 0 0 20px #007bff99;
-    }
-    .modal-content img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 1rem;
-      border: 2px solid #007bff;
-    }
-    .modal-content button.close-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: transparent;
-      border: none;
-      font-size: 1.5rem;
-      color: #007bff;
-      cursor: pointer;
-    }
-    footer {
-      margin-top: auto;
-      padding: 1rem 0;
-      text-align: center;
-      font-family: 'Pacifico', cursive;
-      color: #007bff;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VipCoringa | Monitor de Views</title>
+    <!-- Inclui Tailwind CSS para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carrega a fonte 'Fira Code' do Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Define a fonte padrão para o corpo e a cor de fundo */
+        body {
+            font-family: 'Fira Code', monospace;
+            background-color: #0a0a0a;
+        }
+        /* Estilos para a caixa do terminal, adicionando uma sombra */
+        .terminal {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        /* Estilos para o cabeçalho do terminal */
+        .terminal-header {
+            height: 30px;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+        }
+        /* Estilos para os pontos de controle (vermelho, amarelo, verde) no cabeçalho */
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        /* Estilos para a área de conteúdo do terminal, adicionando uma sombra interna */
+        .terminal-content {
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        /* Animação de piscar para o cursor */
+        .blink {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
 </head>
-<body>
-
-  <h1 class="text-4xl font-pacifico text-primary mb-4">VipCoringa</h1>
-  <p class="mb-6 text-gray-400">Monitor de Performance em tempo real</p>
-
-  <pre id="ascii-panel" class="ascii-panel" aria-live="polite" aria-atomic="true"></pre>
-
-  <p class="mt-4 text-gray-400 text-sm" id="last-update">Carregando...</p>
-
-  <section class="glass" aria-label="Informações do desenvolvedor">
-    <i class="ri-computer-line ri-3x mb-4" style="color:#007bff;"></i>
-    <h2 class="text-2xl font-semibold mb-3" style="color:#007bff;">Desenvolvedor</h2>
-    <img src="https://i.imgur.com/gi0h7c1.jpeg" alt="Foto do Ramon" />
-    <h3 class="text-xl mt-2 mb-4" style="color:#007bff;">Ramon</h3>
-    <button id="openModalBtn" class="bg-primary text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors" aria-haspopup="dialog" aria-controls="developerModal">
-      Sobre mim
-    </button>
-  </section>
-
-  <div id="developerModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" class="modal" tabindex="-1">
-    <div class="modal-content">
-      <button class="close-btn" id="closeModalBtn" aria-label="Fechar modal">&times;</button>
-      <img src="https://i.imgur.com/XU9s98u.jpeg" alt="VipCoringa" />
-      <h3 id="modalTitle" class="text-2xl mb-4" style="color:#007bff;">Ramon</h3>
-      <p>Eu não sou um monstro, sou apenas à frente da curva.</p>
-      <p class="mt-4">
-        <a href="https://github.com/VipCoringa" target="_blank" rel="noopener" aria-label="VipCoringa" style="color:#007bff; text-decoration: underline;">
-          GitHub
-          <i class="ri-github-fill"></i>
-        </a>
-      </p>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-900 text-gray-100">
+    <!-- Título principal da página -->
+    <div class="w-full max-w-4xl mx-auto mb-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-center text-blue-400 font-mono">
+            VipCoringa <span class="text-gray-400">|</span> <span class="text-gray-300">Monitor de Views</span>
+        </h1>
     </div>
-  </div>
 
-  <footer>
-    &copy; 2025 Todos os direitos reservados - VipCoringa
-  </footer>
+    <!-- Contêiner principal do terminal -->
+    <div class="terminal w-full max-w-4xl rounded-lg overflow-hidden border border-gray-700">
+        <!-- Cabeçalho do terminal com os botões de controle e o endereço da fonte de dados -->
+        <div class="terminal-header bg-gray-800 flex items-center px-4">
+            <div class="terminal-dot bg-red-500"></div>
+            <div class="terminal-dot bg-yellow-500"></div>
+            <div class="terminal-dot bg-green-500"></div>
+            <!-- A URL agora indica a fonte via proxy CORS -->
+            <span class="text-xs ml-4 text-gray-400 hidden sm:inline">https://komarev.com/ghpvc/ (Via CORS Proxy)</span>
+        </div>
+        
+        <!-- Área de conteúdo onde o painel formatado será exibido -->
+        <div class="terminal-content bg-black p-4 md:p-6 overflow-auto max-h-[70vh]">
+            <pre class="text-sm md:text-base text-green-100 font-mono whitespace-pre-wrap" id="api-content">
+Carregando dados do monitor... <span class="blink">|</span>
+            </pre>
+        </div>
+        
+        <!-- Rodapé do terminal com informações de status e última atualização -->
+        <div class="bg-gray-900 text-xs text-gray-500 p-2 flex justify-between items-center">
+            <div>
+                <span class="hidden sm:inline">Terminal</span> 
+                <span class="inline sm:hidden">VipCoringa</span>
+            </div>
+            <div>
+                <span id="last-update">Última atualização: --:--:--</span>
+            </div>
+        </div>
+    </div>
 
-  <script>
-    // ASCII panel and real-time update
-    const asciiPanel = document.getElementById('ascii-panel');
-    const lastUpdate = document.getElementById('last-update');
+    <script>
+        // ============================================================================================================
+        // ATENÇÃO: USO DE PROXY PÚBLICO CORS
+        // Esta é a solução para fazer a requisição funcionar no GitHub Pages,
+        // contornando o erro de CORS (Cross-Origin Resource Sharing) que a API komarev.com não permite.
+        // NO ENTANTO, proxies públicos NÃO SÃO RECOMENDADOS PARA USO EM PRODUÇÃO devido a:
+        // - Confiabilidade: Podem sair do ar a qualquer momento.
+        // - Limites de Uso: Podem bloquear suas requisições se houver muitas.
+        // - Segurança: Seus dados passam por um servidor de terceiros.
+        // A MELHOR SOLUÇÃO AINDA É TER UM BACKEND PRÓPRIO (como na Vercel Functions) ou que a API de destino permita CORS.
+        // ============================================================================================================
 
-    function formatTime(date) {
-      return date.toLocaleTimeString('pt-BR', { hour12: false });
-    }
+        // URL da API komarev.com que retorna as views em formato SVG.
+        const originalKomarevApiUrl = 'https://komarev.com/ghpvc/?username=VipCoringa&style=for-the-badge&label=Views:&color=gray';
+        
+        // URL do proxy CORS público, concatenado com a URL da API real.
+        // O proxy `https://corsproxy.io/` é apenas um exemplo.
+        // Você pode testar outros como `https://cors-anywhere.herokuapp.com/` (com desvantagens semelhantes).
+        const komarevApiUrl = `https://corsproxy.io/?${encodeURIComponent(originalKomarevApiUrl)}`;
+        
+        const USERNAME = 'VipCoringa'; // Seu nome de usuário para o monitor
+        const ARROW = '⇧'; // Caractere de seta
 
-    function generateAsciiArt(views, uptime, loadAvg) {
-      return `
+        const contentElement = document.getElementById('api-content');
+        const lastUpdateElement = document.getElementById('last-update');
+        
+        /**
+         * Obtém a hora atual formatada.
+         * @returns {string} A hora atual no formato HH:MM:SS.
+         */
+        function getHora() {
+            // Adicionado timeZone: 'America/Sao_Paulo' para garantir o fuso horário correto
+            return new Date().toLocaleTimeString('pt-BR', { hour12: false, timeZone: 'America/Sao_Paulo' });
+        }
+
+        /**
+         * Constrói o painel de texto formatado, similar ao seu backend original.
+         * @param {string} views - O número de views.
+         * @param {string} status - O status do monitor.
+         * @param {string} hora - A hora atual.
+         * @returns {string} O painel de texto formatado.
+         */
+        function buildPanel(views, status, hora) {
+            // Usa padEnd para garantir que as strings tenham o mesmo comprimento para o alinhamento ASCII
+            return `
 ╔════════════════════════════════╗
-║        MONITOR VIPCORINGA      ║
+║       𝙼𝙾𝙽𝙸𝚃𝙾𝚁 𝙳𝙴 𝚅𝙸𝙴𝚆𝚂       ║
 ╠════════════════════════════════╣
-║ Visitas: ${views.toString().padStart(10)}         ║
-║ Uptime: ${uptime.padEnd(13)} ║
-║ Load Avg: ${loadAvg.padEnd(12)} ║
+║ Usuário: ${USERNAME.padEnd(20)}║
+╠════════════════════════════════╣
+║ 𝚅𝙸𝙴𝚆𝚂 𝙰𝚃𝚄𝙰𝙸𝚂 : ${views.toString().padEnd(15)}║
+║ 𝚂𝚃𝙰𝚃𝚄𝚂       : ${status.padEnd(15)}║
+║ 𝙷𝙾𝚁𝙰́𝚁𝙸𝙾      : ${hora.padEnd(15)}║
 ╚════════════════════════════════╝
-`;
-    }
+`.trim(); // .trim() remove espaços em branco extras no início/fim.
+        }
 
-    function updatePerformance() {
-      // Simulando dados
-      const views = Math.floor(650000 + Math.random() * 10000).toLocaleString('pt-BR');
-      const uptime = new Date(processUptime() * 1000).toISOString().substr(11, 8) || "00:10:23";
-      const loadAvg = (Math.random() * 2).toFixed(2);
+        /**
+         * Busca o número de views diretamente da API komarev.com (via proxy) e atualiza o painel.
+         */
+        async function fetchData() {
+            try {
+                // Faz a requisição para o proxy CORS, que então encaminha para a API komarev.com
+                const response = await fetch(komarevApiUrl, { cache: 'no-store' });
+                
+                // Se a resposta do proxy não for OK, algo deu errado (o proxy pode ter falhado ou a API).
+                if (!response.ok) {
+                    throw new Error(`Erro na requisição (possivelmente proxy ou Komarev): ${response.status} ${response.statusText}`);
+                }
+                
+                // A resposta é um SVG, precisamos extrair o número de views dele.
+                const svgText = await response.text();
+                // A expressão regular procura por 'aria-label="(?:[^"]*:: )?([0-9,]+)"' e captura o número.
+                const match = svgText.match(/aria-label="(?:[^"]*:: )?([0-9,]+)/);
+                
+                let views = 'N/A';
+                if (match && match[1]) {
+                    views = match[1]; // O número de views encontrado
+                } else {
+                    console.warn('Não foi possível extrair o número de views do SVG.');
+                }
 
-      const asciiArt = generateAsciiArt(views, uptime, loadAvg);
-      asciiPanel.textContent = asciiArt;
+                const hora = getHora();
+                const status = `${ARROW} 𝚂𝚄𝙱𝙸𝙽𝙳𝙾`; // O status ainda é fixo.
 
-      lastUpdate.textContent = `Última atualização: ${formatTime(new Date())}`;
+                // Constrói o painel com os dados obtidos
+                const painel = buildPanel(views, status, hora);
+                contentElement.textContent = painel; // Atualiza o conteúdo do terminal
+                
+                updateDateTime(); // Atualiza o carimbo de data/hora da última atualização
+            } catch (error) {
+                const errorTime = new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+                contentElement.textContent = `[${errorTime}] Erro ao carregar dados: ${error.message}\nVerifique o console para mais detalhes ou tente outro proxy CORS.`;
+                console.error('Erro ao buscar dados:', error);
+            }
+        }
 
-      // Flash effect
-      asciiPanel.classList.remove('update-flash');
-      void asciiPanel.offsetWidth; // trigger reflow
-      asciiPanel.classList.add('update-flash');
-    }
+        /**
+         * Atualiza a exibição da data e hora da última atualização.
+         */
+        function updateDateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+            lastUpdateElement.textContent = `Última atualização: ${timeString}`;
+        }
 
-    // Process uptime mock
-    let startTime = Date.now();
-    function processUptime() {
-      return (Date.now() - startTime) / 1000;
-    }
+        // Carrega os dados imediatamente e depois a cada 1 segundo
+        fetchData();
+        setInterval(fetchData, 1000);
 
-    updatePerformance();
-    setInterval(updatePerformance, 5000);
-
-    // Modal logic
-    const openModalBtn = document.getElementById('openModalBtn');
-    const developerModal = document.getElementById('developerModal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-
-    openModalBtn.addEventListener('click', () => {
-      developerModal.classList.add('show');
-      developerModal.focus();
-    });
-
-    closeModalBtn.addEventListener('click', () => {
-      developerModal.classList.remove('show');
-      openModalBtn.focus();
-    });
-
-    developerModal.addEventListener('click', (event) => {
-      if (event.target === developerModal) {
-        developerModal.classList.remove('show');
-        openModalBtn.focus();
-      }
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && developerModal.classList.contains('show')) {
-        developerModal.classList.remove('show');
-        openModalBtn.focus();
-      }
-    });
-  </script>
+        // Atualiza o horário a cada segundo para manter preciso
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+    </script>
 </body>
 </html>
+
