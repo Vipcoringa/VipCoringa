@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Sistema de Likes Gratuito - Free Fire</title>
+    <meta name="description" content="Sistema gratuito de likes para Free Fire! Envie até 100 likes por dia diretamente para seu perfil. Potencialize seu perfil agora de forma totalmente gratuita!">
+    <meta name="keywords" content="likes grátis, ff, likes free fire, likes ff, free fire, likes gratuitos">
+    <meta property="og:title" content="Sistema de Likes Gratuito - Free Fire">
+    <meta property="og:description" content="Sistema gratuito de likes para Free Fire! Envie até 100 likes por dia diretamente para seu perfil.">
+    <meta property="og:image" content="https://i.imgur.com/LWxmX3L.png">
+    <meta property="og:image:secure_url" content="https://i.imgur.com/LWxmX3L.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="index.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Sistema de Likes Gratuito - Free Fire">
+    <meta property="og:locale" content="pt_BR">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sistema de Likes Gratuito - Free Fire">
+    <meta name="twitter:description" content="Sistema gratuito de likes para Free Fire! Envie até 100 likes por dia diretamente para seu perfil.">
+    <meta name="twitter:image" content="https://i.imgur.com/LWxmX3L.png">
+    <link rel="icon" href="https://i.imgur.com/LWxmX3L.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .status-message {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            display: none;
+        }
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 10px;
+        }
+        .btn-primary {
+            background-color: #4a00e0;
+            border-color: #4a00e0;
+        }
+        .btn-primary:hover {
+            background-color: #3a00b0;
+            border-color: #3a00b0;
+        }
+        .navbar-brand img {
+            border-radius: 5px;
+        }
+        .feature-icon {
+            font-size: 2rem;
+            color: #4a00e0;
+            margin-bottom: 10px;
+        }
+        .feature-box {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            margin-bottom: 20px;
+            height: 100%;
+        }
+        .footer {
+            margin-top: 50px;
+        }
+        .form-label {
+            font-weight: 600;
+        }
+        .result-card {
+            display: none;
+            margin-top: 20px;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .result-label {
+            font-weight: 600;
+        }
+        .result-value {
+            font-weight: 500;
+        }
+        .success-badge {
+            background-color: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .error-badge {
+            background-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .warning-badge {
+            background-color: #ffc107;
+            color: #212529;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="https://i.imgur.com/LWxmX3L.png" alt="Logo do Sistema de Likes" style="max-width: 40px; height: auto;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" style="color: white;">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" style="color: white;">Suporte</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="slidelikes" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://i.imgur.com/Sti9z0T.png" class="d-block w-100" alt="Banner Sistema de Likes Gratuito">
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="mb-4 text-center">
+            <h2>Sistema de Likes Gratuito</h2>
+            <p class="lead">Envie likes para seu perfil do Free Fire de forma totalmente gratuita!</p>
+        </div>
+
+        <!-- Mensagens de status -->
+        <div id="statusMessage" class="status-message"></div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Enviar Likes</h5>
+                        <form id="formLikes">
+                            <div class="mb-3">
+                                <label for="uid" class="form-label"><strong>ID da conta</strong><span style="color:red;">*</span>:</label>
+                                <input type="text" class="form-control" id="uid" name="uid" placeholder="Ex: 1354970086" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="server_name" class="form-label"><strong>Servidor</strong><span style="color:red;">*</span>:</label>
+                                <select class="form-select" id="server_name" name="server_name" required>
+                                    <option value="">Selecione seu servidor</option>
+                                    <option value="BR">Brasil (BR)</option>
+                                    <option value="IND">Índia (IND)</option>
+                                    <option value="ID">Indonésia (ID)</option>
+                                    <option value="ME">Oriente Médio (ME)</option>
+                                    <option value="VN">Vietnã (VN)</option>
+                                    <option value="TH">Tailândia (TH)</option>
+                                    <option value="CIS">CEI (CIS)</option>
+                                    <option value="BD">Bangladesh (BD)</option>
+                                    <option value="PK">Paquistão (PK)</option>
+                                    <option value="SG">Singapura (SG)</option>
+                                    <option value="NA">América do Norte (NA)</option>
+                                    <option value="SAC">América do Sul (SAC)</option>
+                                    <option value="EU">Europa (EU)</option>
+                                    <option value="TW">Taiwan (TW)</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="termos" required>
+                                <label class="form-check-label" for="termos"><strong>Li e concordo com os</strong> <a href="#" data-bs-toggle="modal" data-bs-target="#termosModal">termos de serviço.</a></label>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary" id="btnEnviar">
+                                    <span id="btnText">Enviar Likes</span>
+                                    <div id="btnLoading" class="spinner-border spinner-border-sm text-light ms-2" role="status" style="display: none;">
+                                        <span class="visually-hidden">Carregando...</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Resultado da API -->
+                <div class="card result-card" id="resultCard">
+                    <div class="card-body">
+                        <h5 class="card-title text-center" id="resultTitle">Resultado</h5>
+                        <div id="resultContent">
+                            <!-- Conteúdo será preenchido dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Informações</h5>
+                        <div class="feature-box">
+                            <i class="bi bi-lightning-charge feature-icon"></i>
+                            <h5>Rápido</h5>
+                            <p>Envio de likes em segundos</p>
+                        </div>
+                        <div class="feature-box">
+                            <i class="bi bi-currency-dollar feature-icon"></i>
+                            <h5>Grátis</h5>
+                            <p>Serviço 100% gratuito</p>
+                        </div>
+                        <div class="feature-box">
+                            <i class="bi bi-shield-check feature-icon"></i>
+                            <h5>Seguro</h5>
+                            <p>Sem riscos para sua conta</p>
+                        </div>
+                        <div class="alert alert-info mt-3">
+                            <small><strong>Nota:</strong> Devido às limitações da Garena, você pode enviar até 100 likes por dia.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Como Funciona</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="text-center mb-3">
+                                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: bold;">1</div>
+                                    <h6 class="mt-2">Insira seu ID e servidor</h6>
+                                    <p>Digite seu ID do Free Fire e selecione o servidor correto</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center mb-3">
+                                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: bold;">2</div>
+                                    <h6 class="mt-2">Clique em Enviar</h6>
+                                    <p>Clique no botão para enviar os likes para sua conta</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center mb-3">
+                                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: bold;">3</div>
+                                    <h6 class="mt-2">Receba os likes</h6>
+                                    <p>Os likes serão enviados instantaneamente para seu perfil</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Termos de Serviço -->
+    <div class="modal fade" id="termosModal" tabindex="-1" aria-labelledby="termosModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termosModalLabel">Termos de Serviço</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Ao usar este serviço, você concorda com os seguintes termos:</p>
+                    <ul>
+                        <li>Este serviço é fornecido gratuitamente e sem garantias</li>
+                        <li>Você pode enviar até 100 likes por dia devido às limitações da Garena</li>
+                        <li>Não nos responsabilizamos por quaisquer problemas que possam ocorrer com sua conta</li>
+                        <li>Reservamo-nos o direito de modificar ou descontinuar o serviço a qualquer momento</li>
+                        <li>O uso inadequado do serviço pode resultar na suspensão do acesso</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 footer">
+        <div class="container text-center">
+            <p>A vida é um navio à deriva. Nunca se esqueça: liberdade é traçar seu próprio caminho.</p>
+            <p class="mb-0">© 2023 Sistema de Likes Gratuito - Free Fire</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('formLikes');
+            const btnEnviar = document.getElementById('btnEnviar');
+            const btnText = document.getElementById('btnText');
+            const btnLoading = document.getElementById('btnLoading');
+            const statusMessage = document.getElementById('statusMessage');
+            const resultCard = document.getElementById('resultCard');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultContent = document.getElementById('resultContent');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const uid = document.getElementById('uid').value;
+                const server_name = document.getElementById('server_name').value;
+                
+                if (!uid || !server_name) {
+                    showMessage('Por favor, preencha todos os campos obrigatórios.', 'error');
+                    return;
+                }
+
+                // Mostrar loading
+                btnText.textContent = 'Enviando...';
+                btnLoading.style.display = 'inline-block';
+                btnEnviar.disabled = true;
+                resultCard.style.display = 'none';
+
+                // Fazer requisição para a API
+                fetch(`https://corsproxy.io/?https://uplikesff.vercel.app/like?uid=${uid}&server_name=${server_name}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Processar a resposta da API
+                        processApiResponse(data);
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        showMessage('Erro de conexão. Tente novamente mais tarde.', 'error');
+                    })
+                    .finally(() => {
+                        // Restaurar botão
+                        btnText.textContent = 'Enviar Likes';
+                        btnLoading.style.display = 'none';
+                        btnEnviar.disabled = false;
+                    });
+            });
+
+            function processApiResponse(data) {
+                // Limpar conteúdo anterior
+                resultContent.innerHTML = '';
+                
+                // Determinar tipo de resposta
+                let statusType = 'info';
+                let statusText = '';
+                
+                if (data["📋 • Status"]) {
+                    const status = data["📋 • Status"];
+                    
+                    if (status.startsWith("1")) {
+                        statusType = 'success';
+                        statusText = 'Likes enviados com sucesso!';
+                    } else if (status.startsWith("2")) {
+                        statusType = 'warning';
+                        statusText = 'Atenção: Não foram enviados likes.';
+                    } else if (status.includes("Erro")) {
+                        statusType = 'error';
+                        statusText = status;
+                    } else {
+                        statusType = 'info';
+                        statusText = status;
+                    }
+                }
+                
+                // Exibir mensagem de status
+                showMessage(statusText, statusType);
+                
+                // Criar conteúdo do resultado
+                const resultItems = [
+                    { label: "Nome", key: "👤 • Nome", emoji: "👤" },
+                    { label: "UID", key: "🆔 • UID", emoji: "🆔" },
+                    { label: "Região", key: "🌍 • Região", emoji: "🌍" },
+                    { label: "Likes Antes", key: "📊 • Likes Antes", emoji: "📊" },
+                    { label: "Likes Agora", key: "🔄 • Likes Agora", emoji: "🔄" },
+                    { label: "Likes Recebidos", key: "📨 • Likes Recebidos", emoji: "📨" },
+                    { label: "Velocidade", key: "⏱️ • Velocidade", emoji: "⏱️" },
+                    { label: "Status", key: "📋 • Status", emoji: "📋" }
+                ];
+                
+                let html = '';
+                
+                resultItems.forEach(item => {
+                    if (data[item.key] !== undefined) {
+                        html += `
+                            <div class="result-item">
+                                <span class="result-label">${item.emoji} ${item.label}:</span>
+                                <span class="result-value">${data[item.key]}</span>
+                            </div>
+                        `;
+                    }
+                });
+                
+                resultContent.innerHTML = html;
+                
+                // Ajustar título e exibir card
+                if (statusType === 'success') {
+                    resultTitle.innerHTML = '<span class="success-badge">Sucesso!</span>';
+                } else if (statusType === 'error') {
+                    resultTitle.innerHTML = '<span class="error-badge">Erro</span>';
+                } else if (statusType === 'warning') {
+                    resultTitle.innerHTML = '<span class="warning-badge">Atenção</span>';
+                }
+                
+                resultCard.style.display = 'block';
+                
+                // Rolagem suave para o resultado
+                resultCard.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            function showMessage(message, type) {
+                statusMessage.textContent = message;
+                statusMessage.className = 'status-message';
+                
+                if (type === 'success') {
+                    statusMessage.classList.add('status-success');
+                } else if (type === 'error') {
+                    statusMessage.classList.add('status-error');
+                } else {
+                    statusMessage.classList.add('status-info');
+                }
+                
+                statusMessage.style.display = 'block';
+                
+                // Rolagem suave para a mensagem
+                statusMessage.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>
